@@ -1,0 +1,92 @@
+/* Navbar.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: var(--navbar-bg-light);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  .navbar.dark-mode {
+    background-color: var(--navbar-bg-dark);
+  }
+  
+  .navbar-links {
+    display: flex;
+    gap: 24px;
+  }
+  
+  .navbar-link {
+    color: var(--navbar-link-color-light);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-link:hover {
+    color: var(--navbar-link-hover-color);
+  }
+  
+  .navbar-button {
+    font-size: 0.875rem;
+    padding: 8px 16px;
+    border-radius: 25px;
+    background-color: var(--navbar-button-bg-light);
+    color: var(--navbar-button-text-light);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-button:hover {
+    background-color: var(--navbar-button-bg-hover-light);
+  }
+  
+  .navbar-button.dark-mode {
+    background-color: var(--navbar-button-bg-dark);
+    color: var(--navbar-button-text-dark);
+  }
+  
+  .navbar-button.dark-mode:hover {
+    background-color: var(--navbar-button-bg-hover-dark);
+  }
+  
+  /* Light Mode Colors */
+  :root {
+    --navbar-bg-light: #ffffff;
+    --navbar-link-color-light: #4b5563;
+    --navbar-link-hover-color: #3b82f6;
+    --navbar-button-bg-light: #e5e7eb;
+    --navbar-button-text-light: #374151;
+    --navbar-button-bg-hover-light: #d1d5db;
+  }
+  
+  /* Dark Mode Colors */
+  body.dark {
+    background-color: #1f2937;
+  }
+  
+  .navbar.dark-mode {
+    background-color: #111827;
+  }
+  
+  .navbar-link.dark-mode {
+    color: #d1d5db;
+  }
+  
+  .navbar-button.dark-mode {
+    background-color: #374151;
+    color: #f9fafb;
+  }
+  
+  body.dark .home {
+    background-color: #1f2937;
+    color: #f3f4f6;
+  }
+  

@@ -1,0 +1,23 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Light mode */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #111827;
+  --card-bg: #f9fafb;
+  --input-bg: #ffffff;
+  --border-color: #e5e7eb;
+}
+
+/* Dark mode */
+.dark {
+  --bg-color: #111827;
+  --text-color: #f9fafb;
+  --card-bg: #1f2937;
+  --input-bg: #374151;
+  --border-color: #4b5563;
+}

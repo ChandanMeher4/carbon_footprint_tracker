@@ -125,3 +125,59 @@
   font-size: 1rem;
   text-align: center;
 }
+
+/* Trend and Average Lists */
+.profile-trends,
+.profile-averages,
+.profile-top-activities,
+.profile-suggestions {
+  margin-top: 2rem;
+}
+
+.profile-trends h4,
+.profile-averages h4,
+.profile-top-activities h4,
+.profile-suggestions h4 {
+  font-size: 1.2rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.trend-list,
+.profile-averages ul,
+.profile-top-activities ul,
+.profile-suggestions ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+.trend-list li,
+.profile-averages li,
+.profile-top-activities li,
+.profile-suggestions li {
+  margin-bottom: 0.4rem;
+}
+
+/* Share Button */
+.profile-share {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.share-button {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.share-button:hover {
+  background-color: #2563eb;
+}

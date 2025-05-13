@@ -10,29 +10,44 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import '../styles/EmissionTrends.css';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+// Registering necessary plugins for Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartDataLabels,
+  zoomPlugin
+);
 
 export default function EmissionTrends() {
   const [logs, setLogs] = useState([]);
-  const [view, setView] = useState("weekly");
+  const [view, setView] = useState('weekly');
 
   useEffect(() => {
-    const savedLogs = JSON.parse(localStorage.getItem("carbonLogs")) || [];
+    const savedLogs = JSON.parse(localStorage.getItem('carbonLogs')) || [];
     setLogs(savedLogs);
   }, []);
 
-  // ✅ Function to get YYYY-MM-DD in LOCAL time
+  // Function to get YYYY-MM-DD in local time
   const localISODate = (date) =>
-    date.getFullYear() + '-' +
-    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+    date.getFullYear() +
+    '-' +
+    String(date.getMonth() + 1).padStart(2, '0') +
+    '-' +
     String(date.getDate()).padStart(2, '0');
 
   const groupEmissions = (interval) => {
     const map = new Map();
 
-    logs.forEach(log => {
+    logs.forEach((log) => {
       const date = new Date(log.date);
       let key;
 
@@ -41,7 +56,7 @@ export default function EmissionTrends() {
       } else if (interval === 'monthly') {
         key = date.toLocaleString('default', { month: 'short' });
       } else if (interval === 'daily') {
-        key = localISODate(date); // ✅ Uses local date string
+        key = localISODate(date); // Uses local date string
       }
 
       map.set(key, (map.get(key) || 0) + log.emission);
@@ -56,17 +71,18 @@ export default function EmissionTrends() {
         .map((label, i) => ({ label, value: data[i] }))
         .sort((a, b) => new Date(a.label) - new Date(b.label));
 
-      labels = sorted.map(item => item.label);
-      data = sorted.map(item => item.value);
+      labels = sorted.map((item) => item.label);
+      data = sorted.map((item) => item.value);
     }
 
     // Format daily labels like "10 May"
-    const formattedLabels = (interval === 'daily')
-      ? labels.map(dateStr => {
-          const date = new Date(dateStr);
-          return date.toLocaleDateString('default', { day: 'numeric', month: 'short' });
-        })
-      : labels;
+    const formattedLabels =
+      interval === 'daily'
+        ? labels.map((dateStr) => {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('default', { day: 'numeric', month: 'short' });
+          })
+        : labels;
 
     return { labels: formattedLabels, data };
   };
@@ -88,15 +104,15 @@ export default function EmissionTrends() {
   };
 
   const tips = [
-    "Use public transport or carpool whenever possible.",
-    "Switch to LED bulbs and turn off unused appliances.",
-    "Try a meat-free day once a week.",
-    "Wash clothes in cold water to save energy."
+    'Use public transport or carpool whenever possible.',
+    'Switch to LED bulbs and turn off unused appliances.',
+    'Try a meat-free day once a week.',
+    'Wash clothes in cold water to save energy.',
   ];
 
   const leaderboard = () => {
     const userCount = {};
-    logs.forEach(log => {
+    logs.forEach((log) => {
       userCount[log.user || 'You'] = (userCount[log.user || 'You'] || 0) + log.emission;
     });
 
@@ -105,18 +121,49 @@ export default function EmissionTrends() {
       .slice(0, 3);
   };
 
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      datalabels: {
+        color: '#fff',
+        font: {
+          weight: 'bold',
+          size: 14,
+        },
+        formatter: (value) => `${value.toFixed(2)} kg CO₂`,
+      },
+    },
+    zoom: {
+      pan: {
+        enabled: true,
+        mode: 'xy', // Allows both horizontal and vertical pan
+      },
+      zoom: {
+        enabled: true,
+        mode: 'xy', // Allows zooming in both directions
+        speed: 0.1, // Adjust zoom speed
+      },
+    },
+  };
+
   return (
     <div className="emission-container">
       <div className="header">
         <h1 className="emission-title">Insights & Trends</h1>
         <div className="view-toggle">
-          <button className={view === "daily" ? "active" : ""} onClick={() => setView("daily")}>Daily</button>
-          <button className={view === "weekly" ? "active" : ""} onClick={() => setView("weekly")}>Weekly</button>
-          <button className={view === "monthly" ? "active" : ""} onClick={() => setView("monthly")}>Monthly</button>
+          <button className={view === 'daily' ? 'active' : ''} onClick={() => setView('daily')}>
+            Daily
+          </button>
+          <button className={view === 'weekly' ? 'active' : ''} onClick={() => setView('weekly')}>
+            Weekly
+          </button>
+          <button className={view === 'monthly' ? 'active' : ''} onClick={() => setView('monthly')}>
+            Monthly
+          </button>
         </div>
       </div>
 
-      <Line data={chartData} />
+      <Line data={chartData} options={chartOptions} />
 
       <div className="section">
         <h3>Eco Tips</h3>

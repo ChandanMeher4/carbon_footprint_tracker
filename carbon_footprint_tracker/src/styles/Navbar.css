@@ -1,92 +1,173 @@
 /* Navbar.css */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: var(--navbar-bg-light);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  position: relative;
+}
+
+.navbar.dark-mode {
+  background-color: var(--navbar-bg-dark);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar-brand .navbar-link {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--navbar-link-color-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 24px;
+  transition: all 0.3s ease;
+}
+
+.navbar-links.open {
+  display: block;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background-color: var(--navbar-bg-light);
+  padding: 16px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-link {
+  color: var(--navbar-link-color-light);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-link:hover {
+  color: var(--navbar-link-hover-color);
+  transform: translateY(-2px); /* Adds a small lift effect */
+}
+
+.navbar-link.active {
+  color: var(--navbar-link-active-color);
+  font-weight: 600; /* Slightly bolder font for active links */
+}
+
+.navbar-button {
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: 25px;
+  background-color: var(--navbar-button-bg-light);
+  color: var(--navbar-button-text-light);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navbar-button:hover {
+  background-color: var(--navbar-button-bg-hover-light);
+}
+
+.navbar-button.dark-mode {
+  background-color: var(--navbar-button-bg-dark);
+  color: var(--navbar-button-text-dark);
+}
+
+.navbar-button.dark-mode:hover {
+  background-color: var(--navbar-button-bg-hover-dark);
+}
+
+/* Hamburger Icon */
+.navbar-toggle {
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+
+.navbar-icon {
+  width: 30px;
+  height: 4px;
+  background-color: #333;
+  transition: all 0.3s ease;
+}
+
+.navbar-icon.open {
+  transform: rotate(45deg);
+  background-color: #fff;
+}
+
+.navbar-icon.open::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: 4px;
+  background-color: #fff;
+  transform: rotate(90deg);
+}
+
+.navbar-links {
+  @media (max-width: 768px) {
+    display: none;
   }
-  
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background-color: var(--navbar-bg-light);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-  }
-  
-  .navbar.dark-mode {
-    background-color: var(--navbar-bg-dark);
-  }
-  
+}
+
+@media (max-width: 768px) {
   .navbar-links {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: var(--navbar-bg-light);
+    padding: 16px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar-toggle {
     display: flex;
-    gap: 24px;
   }
-  
-  .navbar-link {
-    color: var(--navbar-link-color-light);
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar-link:hover {
-    color: var(--navbar-link-hover-color);
-  }
-  
-  .navbar-button {
-    font-size: 0.875rem;
-    padding: 8px 16px;
-    border-radius: 25px;
-    background-color: var(--navbar-button-bg-light);
-    color: var(--navbar-button-text-light);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .navbar-button:hover {
-    background-color: var(--navbar-button-bg-hover-light);
-  }
-  
-  .navbar-button.dark-mode {
-    background-color: var(--navbar-button-bg-dark);
-    color: var(--navbar-button-text-dark);
-  }
-  
-  .navbar-button.dark-mode:hover {
-    background-color: var(--navbar-button-bg-hover-dark);
-  }
-  
-  /* Light Mode Colors */
-  :root {
-    --navbar-bg-light: #ffffff;
-    --navbar-link-color-light: #4b5563;
-    --navbar-link-hover-color: #3b82f6;
-    --navbar-button-bg-light: #e5e7eb;
-    --navbar-button-text-light: #374151;
-    --navbar-button-bg-hover-light: #d1d5db;
-  }
-  
-  /* Dark Mode Colors */
-  body.dark {
-    background-color: #1f2937;
-  }
-  
-  .navbar.dark-mode {
-    background-color: #111827;
-  }
-  
-  .navbar-link.dark-mode {
-    color: #d1d5db;
-  }
-  
-  .navbar-button.dark-mode {
-    background-color: #374151;
-    color: #f9fafb;
-  }
-  
-  body.dark .home {
-    background-color: #1f2937;
-    color: #f3f4f6;
-  }
-  
+}
+
+/* Navbar.css */
+
+/* Define custom properties for color schemes */
+:root {
+  /* Light mode colors */
+  --navbar-bg-light: #ffffff;
+  --navbar-link-color-light: #4b5563;
+  --navbar-link-hover-color: #3b82f6;
+  --navbar-link-active-color: #10b981; /* A green color for active links */
+  --navbar-button-bg-light: #e5e7eb;
+  --navbar-button-text-light: #374151;
+  --navbar-button-bg-hover-light: #d1d5db;
+
+  /* Dark mode colors */
+  --navbar-bg-dark: #111827;
+  --navbar-link-color-dark: #d1d5db;
+  --navbar-link-hover-color-dark: #3b82f6;
+  --navbar-button-bg-dark: #374151;
+  --navbar-button-text-dark: #f9fafb;
+  --navbar-button-bg-hover-dark: #2d3748;
+}
+
+/* Other existing styles remain unchanged */

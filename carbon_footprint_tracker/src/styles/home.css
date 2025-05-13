@@ -84,3 +84,51 @@
     color: #6b7280;
   }
   
+  .recent-logs {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.recent-logs h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #2f7d4f;
+}
+
+.recent-logs ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.recent-logs li {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.badge {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.quick-link {
+  padding: 0.5rem 1rem;
+  background-color: #e0f2f1;
+  color: #004d40;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.quick-link:hover {
+  background-color: #b2dfdb;
+}

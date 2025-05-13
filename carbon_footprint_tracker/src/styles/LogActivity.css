@@ -110,3 +110,26 @@
 .delete-btn:hover {
   background-color: #dc2626;
 }
+
+.filter-section {
+  margin: 10px 0;
+}
+
+.total-emission {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.clear-btn {
+  margin-top: 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.clear-btn:hover {
+  background-color: #c0392b;
+}

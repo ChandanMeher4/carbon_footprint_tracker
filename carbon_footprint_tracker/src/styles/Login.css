@@ -1,0 +1,199 @@
+/* Login.css */
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  padding: 35px 30px;
+  position: relative;
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.auth-container h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: 600;
+  position: relative;
+}
+
+.auth-container h2::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(to right, #6e8efb, #a777e3);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-container input {
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.auth-container input:focus {
+  outline: none;
+  border-color: #6e8efb;
+  box-shadow: 0 0 0 3px rgba(110, 142, 251, 0.2);
+  background-color: #fff;
+}
+
+.auth-container input::placeholder {
+  color: #aaa;
+}
+
+.auth-container button {
+  padding: 14px;
+  border-radius: 8px;
+  background: linear-gradient(to right, #6e8efb, #a777e3);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 5px;
+}
+
+.auth-container button:hover {
+  background: linear-gradient(to right, #5d7be0, #9566cc);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
+}
+
+.auth-container button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(110, 142, 251, 0.4);
+}
+
+.auth-container .google-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: white;
+  color: #444;
+  border: 1px solid #ddd;
+  margin-top: 15px;
+}
+
+.auth-container .google-login:hover {
+  background: #f5f5f5;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container .google-login img {
+  width: 20px;
+  height: 20px;
+}
+
+.auth-container .secondary-button {
+  background: transparent;
+  color: #6e8efb;
+  font-weight: 500;
+  border: none;
+  box-shadow: none;
+  margin-top: 15px;
+}
+
+.auth-container .secondary-button:hover {
+  background: rgba(110, 142, 251, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+.auth-container .error {
+  color: #e74c3c;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 25px 20px;
+  }
+  
+  .auth-container h2 {
+    font-size: 24px;
+  }
+  
+  .auth-container input, 
+  .auth-container button {
+    padding: 12px;
+  }
+}
+
+/* Add loading animation */
+.auth-container button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.auth-container button.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Fade-in animation for container */
+.auth-page .auth-container {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

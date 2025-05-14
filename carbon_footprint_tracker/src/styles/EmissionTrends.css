@@ -1,165 +1,250 @@
-/* Main Container */
+/* EmissionTrends.css */
+
 .emission-container {
-  padding: 2rem 3rem;
-  max-width: 900px;
-  margin: 160px auto;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
   background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Header Styles */
+.emission-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
 }
 
-/* Title Styles */
 .emission-title {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 1rem;
-  letter-spacing: -0.5px;
-  line-height: 1.3;
+  color: #333;
+  position: relative;
+  margin: 0;
 }
 
-/* View Toggle */
+.emission-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #43cea2, #185a9d);
+  border-radius: 2px;
+}
+
 .view-toggle {
   display: flex;
-  gap: 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: 30px;
+  padding: 0.25rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .view-toggle button {
-  padding: 0.6rem 1.4rem;
-  background-color: #f3f4f6;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #4b5563;
+  background: none;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
   cursor: pointer;
+  font-weight: 500;
+  color: #666;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.view-toggle button.active,
 .view-toggle button:hover {
-  background-color: #3b82f6;
-  color: #ffffff;
-  border-color: #2563eb;
-  transform: scale(1.05);
+  color: #185a9d;
 }
 
-/* Section Styling */
+.view-toggle button.active {
+  background: linear-gradient(to right, #43cea2, #185a9d);
+  color: white;
+  box-shadow: 0 2px 8px rgba(24, 90, 157, 0.3);
+}
+
+/* Styling for the chart container */
+.emission-container canvas {
+  margin: 1rem 0 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: #fcfcfc;
+  padding: 1rem;
+  max-height: 400px;
+}
+
+/* Sections styling */
 .section {
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
 }
 
-/* Tips Section */
+.section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.section h3 {
+  color: #333;
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.section h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #43cea2, #185a9d);
+  border-radius: 2px;
+}
+
+/* Tips list styling */
 .tips-list {
   list-style: none;
-  padding-left: 0;
-  font-size: 1.1rem;
-  color: #4b5563;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
 }
 
 .tips-list li {
-  background-color: #f9fafb;
   padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
+  border-left: 3px solid #43cea2;
 }
 
 .tips-list li:hover {
-  background-color: #edf2f7;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-left-color: #185a9d;
 }
 
-.tips-list li:last-child {
-  margin-bottom: 0;
-}
-
-/* Leaderboard Section */
+/* Leaderboard styling */
 .leaderboard {
   list-style-position: inside;
-  padding-left: 0;
-  font-size: 1.1rem;
-  color: #2d3748;
+  padding: 0;
 }
 
 .leaderboard li {
-  background-color: #f9fafb;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s ease;
 }
 
 .leaderboard li:hover {
-  background-color: #edf2f7;
-  transform: translateY(-3px);
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.leaderboard li:last-child {
-  margin-bottom: 0;
+.leaderboard li:nth-child(1) {
+  border-left: 5px solid gold;
 }
 
-/* Leaderboard Number Styling */
-.leaderboard .leaderboard-number {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: #10b981; /* Green for top performers */
+.leaderboard li:nth-child(2) {
+  border-left: 5px solid silver;
 }
 
-.leaderboard .leaderboard-user {
-  font-weight: 500;
-  color: #374151;
+.leaderboard li:nth-child(3) {
+  border-left: 5px solid #cd7f32; /* bronze */
 }
 
-/* Responsive Adjustments */
+.leaderboard li::before {
+  content: counter(list-item) ".";
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+/* For dark mode compatibility */
+:root.dark-mode .emission-container {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+:root.dark-mode .emission-title,
+:root.dark-mode .section h3 {
+  color: #f0f0f0;
+}
+
+:root.dark-mode .view-toggle {
+  background-color: #3a3a3a;
+}
+
+:root.dark-mode .view-toggle button {
+  color: #ccc;
+}
+
+:root.dark-mode .view-toggle button:hover {
+  color: #43cea2;
+}
+
+:root.dark-mode .section {
+  background-color: #333;
+}
+
+:root.dark-mode .tips-list li,
+:root.dark-mode .leaderboard li,
+:root.dark-mode canvas {
+  background-color: #444;
+  color: #e0e0e0;
+}
+
+/* Animation for chart data points */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+  .emission-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
   .header {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .emission-title {
-    font-size: 2.2rem;
-  }
-
+  
   .view-toggle {
-    margin-top: 1rem;
+    width: 100%;
+    justify-content: space-between;
   }
-}
-
-@media (max-width: 480px) {
-  .emission-container {
-    padding: 1.5rem;
-    margin: 120px auto;
+  
+  .tips-list {
+    grid-template-columns: 1fr;
   }
-
-  .emission-title {
-    font-size: 1.8rem;
-  }
-
-  .view-toggle button {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.95rem;
-  }
-
-  .leaderboard li {
-    font-size: 1rem;
-    padding: 0.8rem;
+  
+  .emission-container canvas {
+    max-height: 300px;
   }
 }

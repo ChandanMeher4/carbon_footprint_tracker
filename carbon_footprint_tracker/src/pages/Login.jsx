@@ -2,7 +2,7 @@ import { useState } from "react";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
-//import "../styles/Login.css"; // Adjust the path if needed
+import "../styles/Login.css"; // Adjust the path if needed
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +12,7 @@ const Login = () => {
   const loginWithEmail = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/"); // redirect to home after login
+      navigate("/");
     } catch (err) {
       alert(err.message);
     }
@@ -21,32 +21,45 @@ const Login = () => {
   const loginWithGoogle = async () => {
     try {
       await signInWithPopup(auth, provider);
-      navigate("/"); // redirect to home after login
+      navigate("/");
     } catch (err) {
       alert(err.message);
     }
   };
 
   const goToSignup = () => {
-    navigate("/signup"); // navigate to signup page
+    navigate("/signup");
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={loginWithEmail}>Login</button>
-      <button onClick={loginWithGoogle}>Login with Google</button>
-      <button onClick={goToSignup}>Don't have an account? Sign Up</button>
+    <div className="auth-page">
+      <div className="auth-container">
+        <h2>Login</h2>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" onClick={loginWithEmail}>
+            Login
+          </button>
+          <button type="button" onClick={loginWithGoogle} className="google-login">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" />
+            Login with Google
+          </button>
+          <button type="button" onClick={goToSignup} className="secondary-button">
+            Don't have an account? Sign Up
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

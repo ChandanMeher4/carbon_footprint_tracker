@@ -171,3 +171,40 @@ body {
 }
 
 /* Other existing styles remain unchanged */
+
+/* styles/Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.navbar.dark-mode {
+  background-color: #111827;
+}
+
+.navbar-link {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar-link.active {
+  font-weight: bold;
+  border-bottom: 2px solid currentColor;
+}
+
+.navbar-button {
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navbar-button:hover {
+  opacity: 0.8;
+}

@@ -5,12 +5,15 @@ import LogActivity from './pages/LogActivity';
 import Insights from './pages/EmissionTrends';
 import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
-import './App.css'; // Make sure to add the global styles here
+import PrivateRoute from './components/PrivateRoute';
+import Login from './pages/Login';
+import Signup from './pages/SignUp';
+import { AuthProvider } from './hooks/useAuth'; // Import your AuthProvider
+import './App.css';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
-  // Apply dark mode to body when darkMode state changes
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add('dark');
@@ -22,15 +25,22 @@ function App() {
   return (
     <div className={darkMode ? 'dark' : ''}>
       <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-        <Router>
-          <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/log" element={<LogActivity />} />
-            <Route path="/insights" element={<Insights />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-        </Router>
+        <AuthProvider>
+          <Router>
+            <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+
+              {/* Protected Routes */}
+              <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+              <Route path="/log" element={<PrivateRoute><LogActivity /></PrivateRoute>} />
+              <Route path="/insights" element={<PrivateRoute><Insights /></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+            </Routes>
+          </Router>
+        </AuthProvider>
       </div>
     </div>
   );

@@ -6,11 +6,38 @@ html, body, #root {
 
 /* Light mode */
 :root {
-  --bg-color: #ffffff;
-  --text-color: #111827;
-  --card-bg: #f9fafb;
-  --input-bg: #ffffff;
-  --border-color: #e5e7eb;
+  --primary-green: #00D4AA;
+  --primary-green-dark: #00B794;
+  --secondary-blue: #6366F1;
+  --accent-gold: #F59E0B;
+  --danger-red: #EF4444;
+  --success-green: #10B981;
+  --warning-orange: #F97316;
+  
+  --bg-primary: #0A0F0A;
+  --bg-secondary: #0F1B0F;
+  --bg-tertiary: #1A2E1A;
+  --bg-card: rgba(26, 46, 26, 0.4);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-glass-hover: rgba(255, 255, 255, 0.08);
+  
+  --text-primary: #FFFFFF;
+  --text-secondary: #B8E6D3;
+  --text-muted: #7DD3BF;
+  --text-accent: #00D4AA;
+  
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(0, 212, 170, 0.3);
+  
+  --shadow-glow: 0 0 40px rgba(0, 212, 170, 0.15);
+  --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --shadow-intense: 0 30px 80px rgba(0, 212, 170, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Dark mode */

@@ -17,44 +17,54 @@ export default function LogActivity() {
   const [toastMessage, setToastMessage] = useState('');
   const [inputError, setInputError] = useState('');
 
+  // REVISED: More logical activities and units for carbon tracking
   const activitiesByTab = {
     household: [
-      { name: 'Electricity', emissionPerUnit: 0.233, unit: 'kWh', description: 'Average grid electricity' },
-      { name: 'Natural Gas', emissionPerUnit: 0.185, unit: 'kWh', description: 'Heating and cooking' },
-      { name: 'Heating Oil', emissionPerUnit: 2.54, unit: 'liters', description: 'Home heating' },
-      { name: 'LPG/Propane', emissionPerUnit: 1.51, unit: 'liters', description: 'Cooking and heating' },
-      { name: 'Wood', emissionPerUnit: 0.07, unit: 'kg', description: 'Firewood burning' },
-      { name: 'Water', emissionPerUnit: 0.344, unit: 'cubic meters', description: 'Water usage' },
+      { name: 'Electricity', emissionPerUnit: 0.233, unit: 'kWh', description: 'Grid electricity consumption (average)' },
+      { name: 'Natural Gas', emissionPerUnit: 0.185, unit: 'kWh', description: 'Heating and cooking gas' },
+      { name: 'Heating Oil', emissionPerUnit: 2.54, unit: 'liters', description: 'Home heating oil' },
+      { name: 'LPG/Propane', emissionPerUnit: 1.51, unit: 'liters', description: 'Cooking and heating gas (liquefied)' },
+      { name: 'Wood Pellets', emissionPerUnit: 0.04, unit: 'kg', description: 'Wood pellet stove heating' },
+      { name: 'Water Usage', emissionPerUnit: 0.344, unit: 'cubic meters', description: 'Water consumption (incl. treatment)' },
+      { name: 'Waste Disposal', emissionPerUnit: 0.2, unit: 'kg', description: 'Landfilled waste (approx.)' },
+      { name: 'Recycling', emissionPerUnit: -0.1, unit: 'kg', description: 'Recycled materials (CO2 savings, approximate)' },
     ],
     transport: [
-      { name: 'Car (Petrol)', emissionPerUnit: 0.17, unit: 'km', description: 'Average petrol car' },
-      { name: 'Car (Diesel)', emissionPerUnit: 0.15, unit: 'km', description: 'Average diesel car' },
-      { name: 'Car (Electric)', emissionPerUnit: 0.05, unit: 'km', description: 'Electric vehicle' },
-      { name: 'Bus', emissionPerUnit: 0.07, unit: 'km', description: 'Public bus' },
-      { name: 'Train', emissionPerUnit: 0.04, unit: 'km', description: 'Passenger train' },
-      { name: 'Flight (Economy)', emissionPerUnit: 0.15, unit: 'km', description: 'Economy class flight' },
-      { name: 'Motorcycle', emissionPerUnit: 0.11, unit: 'km', description: 'Average motorcycle' },
-      { name: 'Bicycle', emissionPerUnit: 0, unit: 'km', description: 'Zero emissions' },
-      { name: 'Walking', emissionPerUnit: 0, unit: 'km', description: 'Zero emissions' },
+      { name: 'Car (Petrol)', emissionPerUnit: 0.17, unit: 'km', description: 'Average petrol car (per km driven)' },
+      { name: 'Car (Diesel)', emissionPerUnit: 0.15, unit: 'km', description: 'Average diesel car (per km driven)' },
+      { name: 'Car (Electric)', emissionPerUnit: 0.05, unit: 'km', description: 'Electric vehicle (per km, considering grid average)' },
+      { name: 'Bus', emissionPerUnit: 0.07, unit: 'km', description: 'Public bus travel (per km)' },
+      { name: 'Train', emissionPerUnit: 0.04, unit: 'km', description: 'Passenger train travel (per km)' },
+      { name: 'Flight (Short-Haul)', emissionPerUnit: 0.18, unit: 'km', description: 'Short-haul flight (per km, economy)' },
+      { name: 'Flight (Long-Haul)', emissionPerUnit: 0.12, unit: 'km', description: 'Long-haul flight (per km, economy)' },
+      { name: 'Motorcycle', emissionPerUnit: 0.11, unit: 'km', description: 'Average motorcycle travel (per km)' },
+      { name: 'Bicycle', emissionPerUnit: 0, unit: 'km', description: 'Cycling (zero direct emissions)' },
+      { name: 'Walking', emissionPerUnit: 0, unit: 'km', description: 'Walking (zero direct emissions)' },
+      { name: 'Public Transport (General)', emissionPerUnit: 0.06, unit: 'km', description: 'General public transport (e.g., tram/metro)' },
     ],
     food: [
-      { name: 'Beef', emissionPerUnit: 27, unit: 'kg', description: 'Beef consumption' },
-      { name: 'Lamb', emissionPerUnit: 39.2, unit: 'kg', description: 'Lamb consumption' },
-      { name: 'Pork', emissionPerUnit: 12.1, unit: 'kg', description: 'Pork consumption' },
-      { name: 'Chicken', emissionPerUnit: 6.9, unit: 'kg', description: 'Chicken consumption' },
-      { name: 'Fish', emissionPerUnit: 6.1, unit: 'kg', description: 'Fish consumption' },
-      { name: 'Eggs', emissionPerUnit: 4.8, unit: 'kg', description: 'Egg consumption' },
-      { name: 'Milk', emissionPerUnit: 1.9, unit: 'liters', description: 'Dairy milk' },
-      { name: 'Cheese', emissionPerUnit: 13.5, unit: 'kg', description: 'Cheese consumption' },
-      { name: 'Rice', emissionPerUnit: 4, unit: 'kg', description: 'Rice consumption' },
-      { name: 'Tofu', emissionPerUnit: 2, unit: 'kg', description: 'Tofu consumption' },
+      { name: 'Beef', emissionPerUnit: 27, unit: 'kg', description: 'Beef consumption (per kg of product)' },
+      { name: 'Lamb', emissionPerUnit: 39.2, unit: 'kg', description: 'Lamb consumption (per kg of product)' },
+      { name: 'Pork', emissionPerUnit: 12.1, unit: 'kg', description: 'Pork consumption (per kg of product)' },
+      { name: 'Chicken', emissionPerUnit: 6.9, unit: 'kg', description: 'Chicken consumption (per kg of product)' },
+      { name: 'Fish (Wild-caught)', emissionPerUnit: 4, unit: 'kg', description: 'Wild-caught fish (per kg of product)' },
+      { name: 'Fish (Farmed)', emissionPerUnit: 6.1, unit: 'kg', description: 'Farmed fish (per kg of product)' },
+      { name: 'Eggs', emissionPerUnit: 4.8, unit: 'kg', description: 'Egg consumption (per kg of product)' },
+      { name: 'Dairy Milk', emissionPerUnit: 1.9, unit: 'liters', description: 'Dairy milk consumption (per liter)' },
+      { name: 'Plant-based Milk', emissionPerUnit: 0.5, unit: 'liters', description: 'Oat, almond, soy milk (per liter)' },
+      { name: 'Cheese', emissionPerUnit: 13.5, unit: 'kg', description: 'Cheese consumption (per kg of product)' },
+      { name: 'Rice', emissionPerUnit: 4, unit: 'kg', description: 'Rice consumption (per kg of uncooked rice)' },
+      { name: 'Tofu', emissionPerUnit: 2, unit: 'kg', description: 'Tofu consumption (per kg of product)' },
+      { name: 'Vegetables', emissionPerUnit: 0.5, unit: 'kg', description: 'Average vegetables (per kg)' },
+      { name: 'Fruits', emissionPerUnit: 0.8, unit: 'kg', description: 'Average fruits (per kg)' },
     ],
-    miscellaneous: [
-      { name: 'Using a Computer', emissionPerUnit: 0.05, unit: 'hour', description: 'Desktop computer usage' },
-      { name: 'Washing Clothes', emissionPerUnit: 0.3, unit: 'load', description: 'Average washing machine' },
-      { name: 'Clothing', emissionPerUnit: 15, unit: 'item', description: 'Average clothing item' },
-      { name: 'Electronics', emissionPerUnit: 45, unit: 'item', description: 'Small electronics' },
-      { name: 'Furniture', emissionPerUnit: 90, unit: 'item', description: 'Furniture piece' },
+    purchases: [ // Renamed from miscellaneous for better grouping
+      { name: 'New Clothing', emissionPerUnit: 15, unit: 'item', description: 'Average new clothing item production' },
+      { name: 'Electronics (Small)', emissionPerUnit: 45, unit: 'item', description: 'Production of small electronics (e.g., phone, tablet)' },
+      { name: 'Furniture (Small)', emissionPerUnit: 50, unit: 'item', description: 'Production of a small furniture piece' },
+      { name: 'Home Appliances (Medium)', emissionPerUnit: 150, unit: 'item', description: 'Production of a medium appliance (e.g., fridge, washing machine)' },
+      { name: 'Online Streaming', emissionPerUnit: 0.05, unit: 'hour', description: 'Data center energy for streaming (approx.)' },
+      { name: 'Paper Products', emissionPerUnit: 1.5, unit: 'kg', description: 'Paper and cardboard production (per kg)' },
     ],
   };
 
@@ -125,8 +135,8 @@ export default function LogActivity() {
     const value = e.target.value;
     setDuration(value);
     const numValue = parseFloat(value);
-    if (isNaN(numValue) || numValue <= 0) {
-      setInputError('Duration/Quantity must be a positive number.');
+    if (isNaN(numValue) || numValue < 0) { // Allow 0 for specific activities like walking/biking
+      setInputError('Duration/Quantity must be a number, and cannot be negative.');
       setEmission('');
       return;
     } else {
@@ -143,7 +153,7 @@ export default function LogActivity() {
 
   const calculateEmission = (activity, duration) => {
     const durationInUnit = parseFloat(duration);
-    if (!isNaN(durationInUnit) && durationInUnit > 0) {
+    if (!isNaN(durationInUnit) && durationInUnit >= 0) { // Allow 0 for specific cases
       return (activity.emissionPerUnit * durationInUnit).toFixed(2);
     }
     return '';
@@ -155,9 +165,10 @@ export default function LogActivity() {
       setToastMessage("Please log in to save your log.");
       return;
     }
-    if (!selectedActivity || !duration || !emission || parseFloat(duration) <= 0) {
-      setInputError("Please select an activity and enter a valid positive quantity.");
-      return;
+    if (!selectedActivity || !duration || emission === '' || parseFloat(duration) < 0 || isNaN(parseFloat(emission))) {
+        // Ensure emission is calculated and not empty/invalid
+        setInputError("Please select an activity and enter a valid non-negative quantity.");
+        return;
     }
 
     try {
@@ -187,16 +198,13 @@ export default function LogActivity() {
 
       setToastMessage('Activity logged successfully! 🎉');
 
-      // Confetti for first log of the day (simple logic)
-      const today = new Date().toLocaleDateString();
-      const hasLoggedToday = logs.some(log => new Date(log.date).toLocaleDateString() === today);
-      if (!hasLoggedToday) {
-        confetti({
+      // Confetti logic: trigger if total emissions are being reduced (e.g., if negative emission is logged for recycling)
+      // or simply for any successful log. For now, let's keep it for any log.
+      confetti({
           particleCount: 100,
           spread: 70,
           origin: { y: 0.6 }
-        });
-      }
+      });
 
     } catch (error) {
       console.error("Error adding log:", error);
@@ -283,7 +291,7 @@ export default function LogActivity() {
           type="number"
           id="duration-input"
           value={duration}
-          min="0"
+          min="0" // Allow 0 for activities like walking/biking
           step="any"
           onChange={handleDurationChange}
           placeholder={`Enter quantity in ${getSelectedActivityUnit() || 'units'}`}
@@ -303,7 +311,7 @@ export default function LogActivity() {
           className="emission-output-field"
         />
 
-        <button type="submit" disabled={!selectedActivity || !duration || !emission || !!inputError}>Add Log</button>
+        <button type="submit" disabled={!selectedActivity || duration === '' || emission === '' || parseFloat(duration) < 0 || !!inputError}>Add Log</button>
       </form>
 
       {toastMessage && <div className="toast-notification">{toastMessage}</div>}

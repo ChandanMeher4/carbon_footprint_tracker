@@ -25,13 +25,16 @@ export default function Profile() {
   const [profileGender, setProfileGender] = useState("");
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-  // Badge definitions with icons
+  // REVISED: Badge definitions with logical icons and descriptions
   const allBadges = {
-    "Eco Warrior": { desc: "Achieve 100+ kg CO₂ emission total.", icon: "🌳" },
-    "Carbon Reducer": { desc: "Log 5 or more distinct activities.", icon: "📝" },
-    "Consistency Champ": { desc: "Log activity for 3 consecutive days.", icon: "⚡" },
-    "Green Pioneer": { desc: "First log recorded!", icon: "🚀" },
-    "Low Carbon Hero": { desc: "Maintain weekly emissions below 20kg for a month.", icon: "🏅" },
+    "Greenhorn Start": { desc: "Logged your very first activity!", icon: "🌱" },
+    "Consistency Champ": { desc: "Logged activity for 3 consecutive days.", icon: "⚡" },
+    "Carbon Cutter": { desc: "Reduced weekly emissions by 10% compared to your previous week.", icon: "📉" },
+    "Low Carbon Hero": { desc: "Maintained weekly emissions below 20kg for a month.", icon: "🏅" },
+    "Diverse Tracker": { desc: "Logged 5 or more distinct activity types.", icon: "📋" },
+    "Zero Emission Day": { desc: "Logged a full day with zero net emissions.", icon: "☀️" },
+    "Goal Achiever": { desc: "Successfully met your carbon reduction goal!", icon: "🎯" },
+    "Community Contributor": { desc: "Shared your progress with friends.", icon: "🤝" },
   };
 
   useEffect(() => {
@@ -49,7 +52,6 @@ export default function Profile() {
 
         if (userDocSnap.exists()) {
           userData = userDocSnap.data();
-          // Set profile details from Firestore
           setProfileName(userData.name || "");
           setProfileAge(userData.age || "");
           setProfileGender(userData.gender || "");
@@ -58,13 +60,16 @@ export default function Profile() {
           setGoal(savedGoal);
           setGoalInput(savedGoal);
         } else {
-          // If user document doesn't exist, create it with basic info and default goal
           userData = {
             carbonGoal: 500,
-            name: "", // Initialize with empty strings
+            name: "",
             age: "",
             gender: "",
-            email: currentUser.email // Set email from auth
+            email: currentUser.email,
+            firstLogRecorded: false,
+            weeklyEmissionHistory: {},
+            lowCarbonWeeksCount: 0,
+            earnedBadges: [], // Initialize earnedBadges for new users
           };
           await setDoc(userRef, userData);
           setGoal(500);
@@ -83,54 +88,52 @@ export default function Profile() {
           return {
             id: docSnap.id,
             ...data,
-            date: data.date?.toDate() // Convert Timestamp to JS Date
+            date: data.date?.toDate()
           };
-        }).filter(log => log.date instanceof Date && !isNaN(log.date.getTime())); // Filter out any invalid dates
-
-        // --- PERFORM CALCULATIONS WITH FETCHED LOGS ---
+        }).filter(log => log.date instanceof Date && !isNaN(log.date.getTime()));
 
         const total = logs.reduce((acc, log) => acc + (log.emission || 0), 0);
         setTotalEmissions(total);
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const dailyTotals = Array(7).fill(0); // [day-6, ..., today]
-        const dateSet = new Set();
+
+        const dailyEmissions = {};
+        const dailyLogsCount = {};
+        const distinctActivitiesLogged = new Set();
 
         logs.forEach(log => {
-          const logDate = log.date;
-          if (!logDate || isNaN(logDate.getTime())) return;
-
-          logDate.setHours(0, 0, 0, 0); // Normalize log date
-          const dateStr = logDate.toISOString().slice(0, 10);
-          dateSet.add(dateStr);
-
-          const diff = Math.floor((today.getTime() - logDate.getTime()) / (1000 * 60 * 60 * 24));
-          if (diff >= 0 && diff < 7) {
-            dailyTotals[6 - diff] += log.emission;
-          }
+            const logDate = log.date;
+            logDate.setHours(0, 0, 0, 0);
+            const dateStr = logDate.toISOString().slice(0, 10);
+            dailyEmissions[dateStr] = (dailyEmissions[dateStr] || 0) + log.emission;
+            dailyLogsCount[dateStr] = (dailyLogsCount[dateStr] || 0) + 1;
+            distinctActivitiesLogged.add(log.activity);
         });
-        setWeeklyTrend(dailyTotals);
 
-        // Streak logic
-        let tempStreak = 0;
-        for (let i = 0; i <= 6; i++) {
+        const last7DaysEmissions = Array(7).fill(0);
+        for (let i = 0; i < 7; i++) {
           const d = new Date(today);
           d.setDate(today.getDate() - i);
           const dStr = d.toISOString().slice(0, 10);
-          if (dateSet.has(dStr)) {
+          last7DaysEmissions[6 - i] = dailyEmissions[dStr] || 0;
+        }
+        setWeeklyTrend(last7DaysEmissions);
+
+        let tempStreak = 0;
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - i);
+          const dStr = d.toISOString().slice(0, 10);
+          if (dailyLogsCount[dStr] > 0) {
             tempStreak++;
           } else {
-            if (i > 0) break; // Break if a gap is found before today
-            else if (i === 0 && !dateSet.has(dStr)) { // If today has no log, streak is 0
-              tempStreak = 0;
-              break;
-            }
+            if (i === 0) tempStreak = 0;
+            break;
           }
         }
         setStreak(tempStreak);
 
-        // Activity averages & top contributors
         const activityData = {};
         logs.forEach(log => {
           if (!activityData[log.activity]) {
@@ -150,35 +153,85 @@ export default function Profile() {
         setAveragePerActivity(avgData);
         setTopActivities(topContributors.sort((a, b) => b.total - a.total).slice(0, 3));
 
-        // Badge logic
-        const earnedBadges = [];
-        if (total >= 100) earnedBadges.push("Eco Warrior");
-        if (logs.length >= 5) earnedBadges.push("Carbon Reducer"); // Example: 5 distinct activities
-        if (tempStreak >= 3) earnedBadges.push("Consistency Champ");
-        if (logs.length > 0 && userData.firstLog === undefined) {
-          earnedBadges.push("Green Pioneer");
-          // To prevent re-earning, you'd update the user doc:
-          // await updateDoc(userRef, { firstLog: true });
+        const earnedBadges = new Set(userData.earnedBadges || []);
+        const updatesForUserDoc = {};
+
+        if (logs.length > 0 && !userData.firstLogRecorded) {
+          earnedBadges.add("Greenhorn Start");
+          updatesForUserDoc.firstLogRecorded = true;
         }
-        // Additional badge for consistent low emissions (more complex to track fully here)
-        // if (checkLowCarbonHero(logs)) earnedBadges.push("Low Carbon Hero");
 
-        setBadges(earnedBadges);
+        if (tempStreak >= 3) {
+          earnedBadges.add("Consistency Champ");
+        }
 
-        // Progress
+        const currentWeekKey = `${today.getFullYear()}-${today.getMonth()}-${Math.floor(today.getDate() / 7)}`;
+        const currentWeekTotalForCalc = last7DaysEmissions.reduce((a, b) => a + b, 0);
+
+        if (userData.weeklyEmissionHistory) {
+            const prevWeekDate = new Date(today);
+            prevWeekDate.setDate(today.getDate() - 7);
+            const prevWeekKey = `${prevWeekDate.getFullYear()}-${prevWeekDate.getMonth()}-${Math.floor(prevWeekDate.getDate() / 7)}`;
+
+            const previousWeekTotal = userData.weeklyEmissionHistory[prevWeekKey] || 0;
+
+            if (previousWeekTotal > 0 && currentWeekTotalForCalc < previousWeekTotal * 0.9) {
+                earnedBadges.add("Carbon Cutter");
+            }
+        }
+        updatesForUserDoc[`weeklyEmissionHistory.${currentWeekKey}`] = currentWeekTotalForCalc;
+
+        const threshold = 20;
+        let currentLowCarbonWeeksCount = userData.lowCarbonWeeksCount || 0;
+
+        if (currentWeekTotalForCalc <= threshold) {
+            currentLowCarbonWeeksCount++;
+        } else {
+            currentLowCarbonWeeksCount = 0;
+        }
+        updatesForUserDoc.lowCarbonWeeksCount = currentLowCarbonWeeksCount;
+
+        if (currentLowCarbonWeeksCount >= 4) {
+            earnedBadges.add("Low Carbon Hero");
+        }
+
+        if (distinctActivitiesLogged.size >= 5) {
+          earnedBadges.add("Diverse Tracker");
+        }
+
+        const zeroEmissionDayExists = Object.keys(dailyEmissions).some(date => dailyEmissions[date] === 0 && dailyLogsCount[date] > 0);
+        if (zeroEmissionDayExists) {
+            earnedBadges.add("Zero Emission Day");
+        }
+
+        if (total <= goal && total > 0 && logs.length > 0) {
+             earnedBadges.add("Goal Achiever");
+        }
+
+        if (Object.keys(updatesForUserDoc).length > 0) {
+            await updateDoc(userRef, {
+                ...updatesForUserDoc,
+                earnedBadges: Array.from(earnedBadges)
+            });
+        }
+        setBadges(Array.from(earnedBadges));
+
         const progressPercent = Math.min((total / goal) * 100, 100);
         setProgress(progressPercent);
 
-        // Goal Estimation
-        const avgDaily = dailyTotals.reduce((a, b) => a + b, 0) / 7;
+        const avgDaily = last7DaysEmissions.reduce((a, b) => a + b, 0) / 7;
         if (avgDaily > 0) {
           const remaining = goal - total;
-          const daysLeft = Math.ceil(remaining / avgDaily);
-          const futureDate = new Date(today);
-          futureDate.setDate(today.getDate() + daysLeft);
-          setEstimatedDate(futureDate.toDateString());
+          if (remaining <= 0) {
+            setEstimatedDate("Goal already met!");
+          } else {
+            const daysLeft = Math.ceil(remaining / avgDaily);
+            const futureDate = new Date(today);
+            futureDate.setDate(today.getDate() + daysLeft);
+            setEstimatedDate(futureDate.toDateString());
+          }
         } else {
-          setEstimatedDate("Insufficient data or no recent activity to estimate.");
+          setEstimatedDate("Log more activities to estimate goal completion.");
         }
 
       } catch (error) {
@@ -189,7 +242,7 @@ export default function Profile() {
     };
 
     fetchUserDataAndLogs();
-  }, [currentUser, goal]); // Re-run when currentUser or goal changes
+  }, [currentUser, goal]);
 
   const handleGoalChange = async (e) => {
     const newGoal = parseFloat(e.target.value);
@@ -205,6 +258,9 @@ export default function Profile() {
         console.error("Error updating goal:", error);
         setToast("Failed to update goal.");
       }
+    } else if (newGoal <= 0 || isNaN(newGoal)) {
+      setToast("Goal must be a positive number.");
+      setGoalInput(goal);
     }
   };
 
@@ -218,12 +274,62 @@ export default function Profile() {
         gender: profileGender,
       });
       setToast("Profile updated successfully!");
-      setIsEditingProfile(false); // Exit edit mode
+      setIsEditingProfile(false);
     } catch (error) {
       console.error("Error updating profile:", error);
       setToast("Failed to update profile.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // NEW: Handle sharing progress using Web Share API
+  const handleShareProgress = async () => {
+    if (!currentUser) {
+      setToast("Please log in to share your progress.");
+      return;
+    }
+
+    const shareText = `Check out my carbon footprint progress on CarbonTrack! My current footprint is ${totalEmissions.toFixed(2)} kg CO₂ and I'm ${progress.toFixed(0)}% towards my goal of ${goal} kg CO₂. Join me in tracking your environmental impact!`;
+    const shareUrl = window.location.origin; // Or a specific landing page URL for your app
+
+    // Check if Web Share API is available
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'CarbonTrack Progress',
+          text: shareText,
+          url: shareUrl,
+        });
+        setToast("Progress shared successfully! 🎉");
+        // Optional: Award "Community Contributor" badge here
+        if (!badges.includes("Community Contributor")) {
+          const userRef = doc(db, "users", currentUser.uid);
+          const userDocSnap = await getDoc(userRef);
+          const userData = userDocSnap.data();
+          const updatedBadges = new Set(userData.earnedBadges || []);
+          updatedBadges.add("Community Contributor");
+          await updateDoc(userRef, { earnedBadges: Array.from(updatedBadges) });
+          setBadges(Array.from(updatedBadges)); // Update local state immediately
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          setToast("Sharing cancelled.");
+        } else {
+          console.error("Error sharing:", error);
+          setToast("Failed to share progress. Please try again.");
+        }
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      const fallbackMessage = `${shareText}\n\nVisit: ${shareUrl}`;
+      try {
+        await navigator.clipboard.writeText(fallbackMessage);
+        setToast("Progress message copied to clipboard! You can paste it anywhere. 🎉");
+      } catch (err) {
+        console.error("Fallback clipboard copy failed:", err);
+        setToast("Failed to copy progress message. Please try manually.");
+      }
     }
   };
 
@@ -235,7 +341,6 @@ export default function Profile() {
     return "#ef4444"; // Red
   };
 
-  // Toast message management
   useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => setToast(""), 3000);
@@ -362,22 +467,22 @@ export default function Profile() {
                 ))}
               </div>
             ) : (
-              <p className="no-data-message">No badges earned yet. Keep logging activities!</p>
+              <p className="no-data-message">No badges earned yet. Keep logging activities to earn them!</p>
             )}
           </div>
 
           <div className="profile-section">
-            <h4>Set Your Total Carbon Footprint Goal</h4>
+            <h4>Set Your Total Carbon Footprint Goal (Annual)</h4>
             <div className="goal-setting-area">
                 <input
                     type="number"
                     value={goalInput}
-                    onChange={(e) => setGoalInput(parseFloat(e.target.value) || 0)} // Update input state immediately
-                    onBlur={handleGoalChange} // Save on blur
-                    onKeyPress={(e) => { // Save on Enter key
+                    onChange={(e) => setGoalInput(parseFloat(e.target.value) || 0)}
+                    onBlur={handleGoalChange}
+                    onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                             handleGoalChange(e);
-                            e.target.blur(); // Remove focus after enter
+                            e.target.blur();
                         }
                     }}
                     min="1"
@@ -389,18 +494,18 @@ export default function Profile() {
           </div>
 
           <div className="profile-section">
-            <h4>Weekly Emission Trend</h4>
+            <h4>Weekly Emission Trend (Last 7 Days)</h4>
             {weeklyTrend.length > 0 && weeklyTrend.some(val => val > 0) ? (
               <ul className="trend-list">
                 {weeklyTrend.map((val, i) => {
                     const d = new Date();
                     d.setDate(d.getDate() - (6 - i));
-                    const dayName = d.toLocaleDateString('default', { weekday: 'short' });
+                    const dayName = d.toLocaleDateString('default', { weekday: 'short', month: 'numeric', day: 'numeric' });
                     return <li key={i}>{dayName}: {val.toFixed(2)} kg</li>;
                 })}
               </ul>
             ) : (
-                <p className="no-data-message">No emission data for the last 7 days.</p>
+                <p className="no-data-message">No emission data for the last 7 days. Log some activities!</p>
             )}
           </div>
 
@@ -436,19 +541,20 @@ export default function Profile() {
               {topActivities.length > 0 ? (
                   <>
                     <li>Focus on reducing **{topActivities[0]?.activity}** emissions, as it's your biggest contributor.</li>
-                    <li>Consider finding sustainable alternatives for **{topActivities[1]?.activity}**.</li>
+                    {topActivities[1] && <li>Consider finding sustainable alternatives for **{topActivities[1]?.activity}**.</li>}
                   </>
               ) : (
-                <p>Log more activities to get personalized suggestions!</p>
+                <li>Log more activities to get personalized suggestions!</li>
               )}
-              <li>🚴 Try biking instead of short car rides.</li>
-              <li>🌿 Plant a tree for every 50 kg CO₂ emitted.</li>
-              <li>💡 Switch to energy-efficient lighting.</li>
+              <li>🚴 Try biking or walking instead of short car rides.</li>
+              <li>💡 Switch to energy-efficient lighting and appliances.</li>
+              <li>🍎 Eat more plant-based meals to reduce your food footprint.</li>
+              <li>♻️ Remember to recycle and reduce waste where possible.</li>
             </ul>
           </div>
 
           <div className="profile-share">
-            <button onClick={() => { setToast("Progress link copied!"); /* Real copy logic here */ }} className="share-button">
+            <button onClick={handleShareProgress} className="share-button">
               📤 Share Your Progress
             </button>
           </div>

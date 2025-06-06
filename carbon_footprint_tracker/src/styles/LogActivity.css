@@ -37,6 +37,7 @@ body::before {
 }
 
 .log-title {
+  margin-top: 100px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 3rem;
   font-weight: 700;

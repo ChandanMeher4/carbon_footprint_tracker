@@ -310,7 +310,7 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--bg-card);
+   background: linear-gradient(45deg, #0d320d, #1d3a21, #073303);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--border-glass);

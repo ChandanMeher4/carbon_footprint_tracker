@@ -540,8 +540,8 @@ export default function Profile() {
             <ul className="suggestions-list">
               {topActivities.length > 0 ? (
                   <>
-                    <li>Focus on reducing **{topActivities[0]?.activity}** emissions, as it's your biggest contributor.</li>
-                    {topActivities[1] && <li>Consider finding sustainable alternatives for **{topActivities[1]?.activity}**.</li>}
+                    <li>Focus on reducing {topActivities[0]?.activity} emissions, as it's your biggest contributor.</li>
+                    {topActivities[1] && <li>Consider finding sustainable alternatives for {topActivities[1]?.activity}.</li>}
                   </>
               ) : (
                 <li>Log more activities to get personalized suggestions!</li>

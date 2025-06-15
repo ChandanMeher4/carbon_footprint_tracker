@@ -12,7 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import zoomPlugin from 'chartjs-plugin-zoom';
+// import zoomPlugin from 'chartjs-plugin-zoom'; // Remove this import
 import '../styles/EmissionTrends.css';
 
 import { auth, db } from '../firebase';
@@ -29,7 +29,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   ChartDataLabels,
-  zoomPlugin
+  // zoomPlugin // Remove this registration
 );
 
 // Function to parse Firestore Timestamps to JS Date objects
@@ -41,7 +41,7 @@ function parseFirestoreTimestamp(dateValue) {
     }
   }
   // Fallback for unexpected formats (though primarily expecting Timestamps)
-  if (dateValue instanceof Date && !isNaN(dateValue.getTime())) {
+  if (dateValue instanceof Date && !isNaN(jsDate.getTime())) {
     return dateValue;
   }
   console.warn("parseFirestoreTimestamp: Could not parse date value:", dateValue);
@@ -265,22 +265,23 @@ export default function EmissionTrends() {
         formatter: (value) => value > 0 ? `${value.toFixed(2)} kg` : null, // Only show if > 0
         display: (context) => context.dataset.data[context.dataIndex] > 0, // Only display labels for values > 0
       },
-      zoom: {
-        pan: {
-          enabled: true,
-          mode: 'xy',
-        },
-        zoom: {
-          wheel: {
-            enabled: true,
-          },
-          pinch: {
-            enabled: true
-          },
-          mode: 'xy',
-          speed: 0.1,
-        },
-      },
+      // Remove the zoom plugin configuration
+      // zoom: {
+      //   pan: {
+      //     enabled: true,
+      //     mode: 'xy',
+      //   },
+      //   zoom: {
+      //     wheel: {
+      //       enabled: true,
+      //     },
+      //     pinch: {
+      //       enabled: true
+      //     },
+      //     mode: 'xy',
+      //     speed: 0.1,
+      //   },
+      // },
       title: {
         display: true,
         text: `Carbon Emission Trends (${view.charAt(0).toUpperCase() + view.slice(1)})`,
@@ -469,20 +470,19 @@ export default function EmissionTrends() {
             <button onClick={exportData} className="export-button">
               Export All Data (CSV)
             </button>
-            {/* Reset Zoom Button */}
-            <button
+            {/* Remove Reset Zoom Buttons as zoom is removed */}
+            {/* <button
                 onClick={() => ChartJS.getChart('myLineChart')?.resetZoom()} // Assuming chart ID 'myLineChart'
                 className="reset-zoom-button"
             >
                 Reset Chart Zoom
             </button>
-            {/* To reset Bar chart zoom, if Bar chart also supports it */}
             <button
                 onClick={() => ChartJS.getChart('myBarChart')?.resetZoom()} // Assuming chart ID 'myBarChart'
                 className="reset-zoom-button"
             >
                 Reset Bar Chart Zoom
-            </button>
+            </button> */}
           </div>
         </>
       ) : (

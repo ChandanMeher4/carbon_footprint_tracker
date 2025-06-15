@@ -487,18 +487,7 @@ body::before {
   transform: translateX(5px);
 }
 
-.log-table tbody tr:hover::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, 
-    var(--primary-green), 
-    var(--success-green));
-  animation: lineGlow 1s ease-in-out;
-}
+
 
 @keyframes lineGlow {
   from { opacity: 0; }

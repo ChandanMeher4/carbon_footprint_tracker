@@ -640,17 +640,14 @@ body::before {
   transition: left 0.5s ease;
 }
 
-.trend-list li:hover,
+ .trend-list li:hover,
 .profile-section li:hover {
   transform: translateX(5px);
   border-color: rgba(0, 212, 170, 0.3);
   background: rgba(255, 255, 255, 0.12);
 }
 
-.trend-list li:hover::before,
-.profile-section li:hover::before {
-  left: 100%;
-}
+   
 
 /* Suggestions List */
 .suggestions-list {

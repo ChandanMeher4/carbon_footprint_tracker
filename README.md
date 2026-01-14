@@ -27,7 +27,7 @@
 Prerequisites: Node.js installed and a Firebase project set up.
 
 ### 1. Clone the Repository
-```bash
+Bash
 git clone [https://github.com/yourusername/carbon_footprint_tracker.git](https://github.com/yourusername/carbon_footprint_tracker.git)
 cd carbon_footprint_tracker
 2. Install Dependencies
